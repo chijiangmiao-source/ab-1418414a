@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>束线联锁监看</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>束线联锁监看</h1>
+    <div class="conn">
+      <span id="conn-dot" class="dot off"></span>
+      <span id="conn-text">未连接</span>
+    </div>
+  </header>
+
+  <div id="snapshot-required" class="banner warn hidden">
+    <strong>必须重新获取快照：</strong>
+    <span id="snapshot-reason">游标已超出可恢复范围（日志截断或游标无效）。</span>
+    <button id="re-snapshot-btn" type="button">立即重新获取快照</button>
+  </div>
+
+  <section class="toolbar">
+    <label>演练
+      <select id="drill-select"></select>
+    </label>
+    <button id="new-drill-btn" type="button">新建演练</button>
+    <input id="new-drill-name" type="text" placeholder="演练名称（可选）" />
+    <div class="spacer"></div>
+    <div class="wm">当前水位：<strong id="watermark">–</strong></div>
+  </section>
+
+  <main class="grid">
+    <section class="card">
+      <h2>通道状态投影</h2>
+      <table id="channels-table">
+        <thead><tr><th>通道</th><th>状态</th><th>最近序号</th></tr></thead>
+        <tbody><tr><td colspan="3" class="muted">暂无数据</td></tr></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>提交状态变更</h2>
+      <form id="event-form">
+        <label>事件标识 event_id
+          <input id="event-id" type="text" required placeholder="稳定唯一标识" />
+        </label>
+        <label>通道
+          <input id="event-channel" type="text" required placeholder="如 BL01-ShutterA" />
+        </label>
+        <label>状态
+          <select id="event-state">
+            <option value="normal">normal</option>
+            <option value="warn">warn</option>
+            <option value="trip">trip</option>
+            <option value="bypassed">bypassed</option>
+          </select>
+        </label>
+        <button type="submit">提交变更</button>
+        <div id="form-msg" class="form-msg"></div>
+      </form>
+    </section>
+
+    <section class="card wide">
+      <h2>最近事件（按全局序号排列）</h2>
+      <table id="events-table">
+        <thead><tr><th>序号</th><th>事件标识</th><th>通道</th><th>状态</th><th>时间</th></tr></thead>
+        <tbody><tr><td colspan="5" class="muted">暂无事件</td></tr></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

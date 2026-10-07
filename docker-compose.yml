@@ -1,0 +1,28 @@
+services:
+  web:
+    build: .
+    image: interlock-monitor:latest
+    ports:
+      - "8080:8080"
+    environment:
+      DB_PATH: /data/interlock.db
+    volumes:
+      - interlock-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import http.client,sys; c=http.client.HTTPConnection('127.0.0.1',8080,timeout=2); c.request('GET','/api/drills'); sys.exit(0 if c.getresponse().status==200 else 1)"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # 一次性验收服务：构建检查 + 代码测试 + API/HTTP/SSE 冒烟，
+  # 覆盖并发写入与订阅交界、断线补齐、过期游标，结束后以退出码报告并退出。
+  verify:
+    build: .
+    image: interlock-monitor:latest
+    command: ["python", "-m", "verify.run"]
+    environment:
+      DB_PATH: /tmp/verify.db
+    restart: "no"
+    depends_on:
+      web:
+        condition: service_healthy
