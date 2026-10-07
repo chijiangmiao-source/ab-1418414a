@@ -1,0 +1,12 @@
+.git
+.venv
+**/__pycache__
+**/.pytest_cache
+**/node_modules
+web/dist
+*.db
+*.db-wal
+*.db-shm
+.dockerignore
+Dockerfile
+docker-compose.yml

@@ -1,0 +1,25 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8000"
+    environment:
+      # 演示用的小保留窗口：验收服务的“过期游标”场景依赖日志截断。
+      # 生产部署请调大（如 10000）。
+      EVENT_LOG_MAX_PER_DRILL: "120"
+      DATABASE_PATH: /data/interlock.db
+    volumes:
+      - app-data:/data
+
+  verify:
+    build:
+      context: .
+      dockerfile: verify/Dockerfile
+    depends_on:
+      - app
+    environment:
+      APP_URL: http://app:8000
+    restart: "no"
+
+volumes:
+  app-data:

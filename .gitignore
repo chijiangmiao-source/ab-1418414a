@@ -13,3 +13,9 @@ __pycache__/
 .yarn-cache/
 *.pyc
 *.pyo
+
+# project
+web/dist/
+*.db
+*.db-wal
+*.db-shm
